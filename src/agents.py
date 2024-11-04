@@ -9,74 +9,101 @@ class Researchers:
             model="groq/llama3-8b-8192",
             api_key=os.environ['GROQ_API_KEY']
         )
+
     def MarketResearcher(self):
-        return Agent(role='Assistant Market Researcher',
-        goal=dedent(f"""Market Research - understanding the industry and the segemnt the company is working in.
-                    Identify the companys key offerings and strategic focus areas(eg. operations, supply chain, customer experience, etc.)
-                    A vision and product information on the industry. 
-                    HIGHLIGHT TRENDS IN INDUSTRY.
-                    For Competitor analysis use annual reports/statements of industry leaders.
-                    A comprehensive competitor analysis and market research report is required
-                    """),
-        backstory=dedent(f"""You are an assistant market researcher
-                        You are an professional, good at spotting and highlighting trends. 
-                        You have to do market research, competitor analysis and finding insights from annual reports"""),
-        verbose=True,
-        llm=self.llm,
-        tools=[SearchTools.search_internet])
-    def CaseResearcher(self,task):
-        return Agent(role='AI implementation Researcher',
-        goal=dedent(f"""Help {task} with the implementation of AI, ML and genai.
-                    Conduct market research and competitor analysis to understand trends in industry
-                    Understand AI and its implementation in innovation in the industry
-                    Write a detailed report highlighting trends in the industry in terms of AI and its implementation"""),
-        backstory=dedent(f"""You are an AI implementation Researcher
-                        You are in need for a commision. You are an professional, good at spotting and highlighting trends.
-                        You are in charge of implementation of AI for{task}"""),
-        verbose=True,
-        llm=self.llm,
-        tools=[SearchTools.search_internet])
+        return Agent(
+            role='Assistant Market Researcher',
+            goal=dedent("""
+                Conduct market research to understand the industry and company segment.
+                - Identify the company's key offerings and strategic focus areas (e.g., operations, supply chain, customer experience).
+                - Highlight industry trends and provide an overview of relevant products and innovations.
+            """),
+            backstory=dedent("""
+                You are a skilled market research assistant, adept at identifying trends and performing competitor analysis. Your main responsibilities are conducting market research and generating insights from industry reports.
+            """),
+            verbose=True,
+            llm=self.llm,
+            tools=[SearchTools.search_internet]
+        )
+
+    def CaseResearcher(self, task):
+        return Agent(
+            role='AI Implementation Researcher',
+            goal=dedent(f"""
+                Support {task} in implementing AI, ML, and GenAI:
+                - Perform market and competitor research to identify industry trends.
+                - Explore AI-driven innovations relevant to {task} and provide insights on AI implementation.
+                - Generate a report on AI industry trends and their applications.
+            """),
+            backstory=dedent(f"""
+                You are an AI implementation researcher with a strong focus on identifying trends in AI and GenAI. Your expertise helps {task} leverage AI effectively in strategic areas.
+            """),
+            verbose=True,
+            llm=self.llm,
+            tools=[SearchTools.search_internet]
+        )
+
     def SeniorMarketResearcher(self):
-        return Agent(role='Senior Market Researcher & Market Research Report Writer',
-        goal=dedent(f"""Writing an detailed report for market research and competitor analysis
-                    The report should identify the companys key offerings and strategic focus areas (e.g., operations, supply chain, customer experience, etc.). 
-                    A vision and product information on the industry should be included. 
-                    HIGHLIGHTING INDUSTRY TRENDS
-                    Include a detailed competitor analyse  
-                    use annual reports of company and industry leaders and competiton.
-                    A comprehensive competitor analysis and market research report is required
-                    1000 words """),
-        backstory=dedent(f"""Senior market research with experience in analysing and understanding research work then making reports
-                        You specialize in market research report writing and competitor analysis with insights from annual statements/reports"""),
-        allow_delegation=True,
-        llm=self.llm,
-        tools=[SearchTools.search_internet])
+        return Agent(
+            role='Senior Market Researcher & Report Writer',
+            goal=dedent("""
+                Produce a comprehensive market research and competitor analysis report:
+                - Identify the company’s key offerings and strategic areas of focus (e.g., operations, supply chain, customer experience).
+                - Highlight industry trends and provide an in-depth competitor analysis.
+                - Use data from annual reports of the company and industry leaders.
+                - Aim for a minimum of 1,000 words.
+            """),
+            backstory=dedent("""
+                As a senior market researcher, you specialize in analyzing research data and writing detailed market reports with competitor insights based on annual reports and industry trends.
+            """),
+            allow_delegation=True,
+            llm=self.llm,
+            tools=[SearchTools.search_internet]
+        )
+
     def ResearchAnalyst(self, task):
-        return Agent(role='Researcher Analyst working for implementation of AI for {task}',
-        goal=dedent(f"""Given the context understand industry trends, generate a detailed report 
-                    Detailing atleast 20 cases of implementation of genai, ML, AI for {task} 
-                    Should benifiting company's key offerings and strategic focus areas (e.g., operations, supply chain, customer experience, etc.)"""),
-        backstory=dedent(f"""Expert research analyst at a IT company helping companies with implementation AI and genAI in their industry.
-                        You are tasked with wrtiting a detailed report detailing at least 20 cases of the implementation of genai, ai and ml for {task}"""),
-        allow_delegation=True,
-        llm=self.llm,
-        tools=[SearchTools.search_internet])
+        return Agent(
+            role=f'Research Analyst for AI Implementation in {task}',
+            goal=dedent(f"""
+                Conduct a detailed analysis of AI, ML, and GenAI use cases for {task}:
+                - Generate a report with at least 20 relevant AI, ML, and GenAI implementation cases.
+                - Ensure each case supports the company’s core objectives (e.g., enhancing operations, improving customer satisfaction).
+            """),
+            backstory=dedent(f"""
+                You are an experienced research analyst in AI implementation, dedicated to providing {task} with a strategic roadmap for AI, GenAI, and ML adoption across key business areas.
+            """),
+            allow_delegation=True,
+            llm=self.llm,
+            tools=[SearchTools.search_internet]
+        )
+
     def DBresearcher(self, task):
-        return Agent(role=f'Researcher working for implementation of AI for {task}',
-        goal=dedent(f"""Find 10 relevent use cases for {task}
-                    Should benifiting company's key offerings and strategic focus areas (e.g., operations, supply chain, customer experience, etc.)
-                    For each case provide technologies used, the challenges faced, and the solutions proposed.
-                    The cases should improve their key offerings & processes, eg. enhance customer satisfaction, boost operationalial efficiency, etc"""),
-        backstory=dedent(f"""Expert in finding atleast 10 relevent cases for implementation of AI, grnai, ml for {task}
-                        Mention the technologies used, the challenges faced, and the solutions proposed"""),
-        allow_delegation=True,
-        llm=self.llm,
-        tools=[SearchTools.search_internet])
+        return Agent(
+            role=f'AI Use Case Researcher for {task}',
+            goal=dedent(f"""
+                Identify 10 relevant AI use cases for {task}:
+                - For each case, outline the technologies used, challenges faced, and solutions proposed.
+                - Ensure cases improve key offerings and processes (e.g., enhancing customer satisfaction, boosting operational efficiency).
+            """),
+            backstory=dedent(f"""
+                You are a research expert focused on finding practical AI, ML, and GenAI use cases for {task}. Your reports include technologies, challenges, and solutions for each use case.
+            """),
+            allow_delegation=True,
+            llm=self.llm,
+            tools=[SearchTools.search_internet]
+        )
+
     def DBFinder(self, task):
-        return Agent(role='Database, Dataset, etc for AI training',
-        goal=dedent(f"""Find databases for implementation of AI,ML & GenAI for {task}
-                    Mention the cases and the databases/datasets for training the algorithm"""),
-        backstory=dedent(f"""Expert in finding relevent datasets for training the AI"""),
-        allow_delegation=True,
-        llm=self.llm,
-        tools=[SearchTools.db_internet])    
+        return Agent(
+            role='Database and Dataset Finder for AI Training',
+            goal=dedent(f"""
+                Locate relevant datasets for AI, ML, and GenAI use cases for {task}:
+                - Provide details on databases/datasets, including URLs, for each use case.
+            """),
+            backstory=dedent("""
+                You are a specialist in finding suitable datasets for AI training, focusing on high-quality sources relevant to the use cases.
+            """),
+            allow_delegation=True,
+            llm=self.llm,
+            tools=[SearchTools.db_internet]
+        )

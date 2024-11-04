@@ -9,55 +9,56 @@ load_dotenv()
 class ResearchCrew:
     def __init__(self, tasks):
         self.tasks = tasks
+        self.agents = Researchers()
+        self.tasks_module = ResearchTask()
+
+    def create_crews(self):
+        
+        crews = []
+
+        # Crew 1: Market Research
+        market_researcher = self.agents.MarketResearcher()
+        senior_researcher = self.agents.SeniorMarketResearcher()
+        research_task1 = self.tasks_module.research(market_researcher, self.tasks)
+        report_task1 = self.tasks_module.generate_report(senior_researcher, self.tasks)
+        crews.append(Crew(
+            agents=[market_researcher, senior_researcher],
+            tasks=[research_task1, report_task1],
+            verbose=True
+        ))
+
+        # Crew 2: Case Research
+        case_researcher = self.agents.CaseResearcher(self.tasks)
+        research_analyst = self.agents.ResearchAnalyst(self.tasks)
+        research_task2 = self.tasks_module.case_research(case_researcher, self.tasks)
+        report_task2 = self.tasks_module.generate_report(research_analyst, self.tasks)
+        crews.append(Crew(
+            agents=[case_researcher, research_analyst],
+            tasks=[research_task2, report_task2],
+            verbose=True
+        ))
+
+        # Crew 3: Database Research
+        db_researcher = self.agents.DBresearcher(self.tasks)
+        db_finder = self.agents.DBFinder(self.tasks)
+        cases_task = self.tasks_module.cases(db_researcher, self.tasks)
+        db_generate_task = self.tasks_module.db_generate(db_finder, self.tasks)
+        crews.append(Crew(
+            agents=[db_researcher, db_finder],
+            tasks=[cases_task, db_generate_task],
+            verbose=True
+        ))
+
+        return crews
 
     def run(self):
-        agents = Researchers()
-        tasks = ResearchTask()
-
-        # AGENTS for the first research
-        market_researcher = agents.MarketResearcher()
-        senior_researcher = agents.SeniorMarketResearcher()
-        # TASKS for the first research
-        research1 = tasks.research(market_researcher, self.tasks)
-        generate_report1 = tasks.generate_report(senior_researcher, self.tasks)
-
-        crew1 = Crew(
-            agents=[market_researcher, senior_researcher],
-            tasks=[research1, generate_report1],
-            verbose=True,
-        )
+        crews = self.create_crews()
         
-        # AGENTS for the second research
-        market_researcher2 = agents.CaseResearcher(self.tasks)
-        research_analyst = agents.ResearchAnalyst(self.tasks)
-        # TASKS for the second research
-        research2 = tasks.case_research(market_researcher2, self.tasks)
-        generate_report2 = tasks.generate_report(research_analyst, self.tasks)
-
-        crew2 = Crew(
-            agents=[market_researcher2, research_analyst],
-            tasks=[research2, generate_report2],
-            verbose=True,
-        )
-        
-        # AGENTS for the third research
-        case_agent = agents.DBresearcher(self.tasks)
-        db_finder = agents.DBFinder(self.tasks)
-        # TASKS for the third research
-        cases = tasks.cases(case_agent, self.tasks)
-        generate_db = tasks.db_generate(db_finder, self.tasks)
-
-        crew3 = Crew(
-            agents=[case_agent, db_finder],
-            tasks=[cases, generate_db],
-            verbose=True,
-        )
-
-        # Execute all crews
-        result0 = crew1.kickoff()
-        result1 = crew2.kickoff()
-        result2 = crew3.kickoff()
-        return [result0, result1, result2]
+        results = []
+        for crew in crews:
+            result = crew.kickoff()
+            results.append(result)
+        return results
 
 # Streamlit UI
 st.set_page_config(page_title="Market Research Bot", page_icon="🔍")
@@ -69,22 +70,21 @@ company_name = st.sidebar.text_input("Company Name:")
 if st.sidebar.button("Run All Research"):
     if company_name:
         crew = ResearchCrew(tasks=company_name)
+        
         with st.spinner("Running all research tasks..."):
-            results = crew.run()
+            results = crew.run()  
             st.success("Research completed!")
+
             
-            result0 = results[0].raw
-            result1 = results[1].raw
-            result2 = results[2].raw
-            st.write("### Market Research Results")
-            st.write(result0)
-            print(results[1])
-            print(type(results[1]))
-            st.write("### Alternative Research Results")
-            st.write(result1)
-            st.write("### Database Research Results")
-            st.write(result2)
-            with open ('links.txt', 'w') as f:
-                f.write(result2)
+            sections = ["### Market Research", "### Use Cases", "### Database Research Results"]
+            for i, result in enumerate(results):
+                st.write(sections[i])
+                st.write(result.raw)
+
+                
+                if i == 2:  
+                    with open('links.txt', 'w') as f:
+                        f.write(result.raw)
+
     else:
         st.warning("Please enter a company name to proceed.")
