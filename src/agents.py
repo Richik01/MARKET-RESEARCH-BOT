@@ -1,12 +1,13 @@
 from crewai import Agent, LLM
 from textwrap import dedent
 from tools.search import SearchTools
+import os
 
 class Researchers:
     def __init__(self):
         self.llm = LLM(
             model="groq/llama3-8b-8192",
-            api_key="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"
+            api_key=os.environ['GROQ_API_KEY']
         )
     def MarketResearcher(self):
         return Agent(role='Assistant Market Researcher',
@@ -18,7 +19,7 @@ class Researchers:
                     A comprehensive competitor analysis and market research report is required
                     """),
         backstory=dedent(f"""You are an assistant market researcher
-                        You are in need for a commision. You are an professional, good at spotting and highlighting trends 
+                        You are an professional, good at spotting and highlighting trends. 
                         You have to do market research, competitor analysis and finding insights from annual reports"""),
         verbose=True,
         llm=self.llm,
@@ -30,7 +31,7 @@ class Researchers:
                     Understand AI and its implementation in innovation in the industry
                     Write a detailed report highlighting trends in the industry in terms of AI and its implementation"""),
         backstory=dedent(f"""You are an AI implementation Researcher
-                        You are in need for a commision. You are an professional, good at spotting and highlighting trends 
+                        You are in need for a commision. You are an professional, good at spotting and highlighting trends.
                         You are in charge of implementation of AI for{task}"""),
         verbose=True,
         llm=self.llm,

@@ -54,8 +54,10 @@ class ResearchCrew:
         )
 
         # Execute all crews
-        results = (crew1.kickoff(), crew2.kickoff(), crew3.kickoff())
-        return results
+        result0 = crew1.kickoff()
+        result1 = crew2.kickoff()
+        result2 = crew3.kickoff()
+        return [result0, result1, result2]
 
 # Streamlit UI
 st.set_page_config(page_title="Market Research Bot", page_icon="🔍")
@@ -82,5 +84,7 @@ if st.sidebar.button("Run All Research"):
             st.write(result1)
             st.write("### Database Research Results")
             st.write(result2)
+            with open ('links.txt', 'w') as f:
+                f.write(result2)
     else:
         st.warning("Please enter a company name to proceed.")
