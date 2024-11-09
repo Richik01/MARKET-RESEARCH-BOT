@@ -9,4 +9,4 @@ Features:
   <li>Dataset Collection for use cases purposes.</li>
 </ul>
 
-<h1>Sample Output: https://github.com/Richik01/MARKET-RESEARCH-BOT/blob/main/output.txt</h1>
+<h3>Sample Output: https://github.com/Richik01/MARKET-RESEARCH-BOT/blob/main/output.txt</h3>
