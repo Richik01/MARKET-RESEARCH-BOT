@@ -1,5 +1,5 @@
 ### MARKET RESEARCH BOT
- 
+# FULL VERSION COMING SOON
 Uses CREWAI for multi agent orchestration.
 
 Features:
@@ -10,3 +10,4 @@ Features:
 </ul>
 
 <h3>Sample Output: https://github.com/Richik01/MARKET-RESEARCH-BOT/blob/main/output.txt</h3>
+<h3>DEMO : https://youtu.be/h8vvaV0T0_Q</h3>
